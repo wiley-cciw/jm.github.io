@@ -11,7 +11,6 @@
       box-sizing: border-box;
     }
     body {
-      /* 替换为你的背景图地址，保持与预约表单一致 */
       background: url("背景图.jpg") no-repeat center center fixed;
       background-size: cover;
       min-height: 100vh;
@@ -29,11 +28,11 @@
     .form-container {
       width: 100%;
       max-width: 500px;
-      background-color: rgba(255, 255, 255, 0.2); /* 半透明磨砂背景 */
-      backdrop-filter: blur(8px); /* 磨砂效果 */
+      background-color: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
       border-radius: 20px;
       padding: 25px;
-      margin-bottom: 20px; /* 避免底部空白 */
+      margin-bottom: 30px;
     }
     .form-title {
       font-size: 20px;
@@ -62,7 +61,7 @@
       width: 100%;
       padding: 12px 18px;
       border: none;
-      border-radius: 30px; /* 大圆角 */
+      border-radius: 30px;
       font-size: 15px;
       color: #333;
       background-color: rgba(255, 255, 255, 0.8);
@@ -78,6 +77,7 @@
     }
     .region-selects select {
       flex: 1;
+      padding: 12px 12px;
     }
     .radio-group {
       display: flex;
@@ -157,7 +157,7 @@
   <!-- 表单容器 -->
   <div class="form-container">
     <h2 class="form-title">加盟信息填写</h2>
-    <p class="form-desc">如有加盟意向，请填写以下信息，我们将尽快与您联系</p>
+    <p class="form-desc">如有加盟意向，请填写信息，我们将尽快与您联系</p>
     
     <form id="joinForm" action="https://formspree.io/f/xkgvlzba" method="POST">
       <!-- 您的姓名 -->
@@ -172,37 +172,51 @@
         <input type="tel" name="电话" id="phone" required>
       </div>
       
-      <!-- 加盟地区（三级下拉） -->
+      <!-- 加盟地区（完善三级联动） -->
       <div class="form-group">
         <label>加盟地区 *</label>
         <div class="region-selects">
           <select name="省份" id="province" required>
-            <option value="" disabled selected>省份</option>
-            <option value="北京">北京</option>
-            <option value="上海">上海</option>
-            <option value="广东">广东</option>
-            <option value="江苏">江苏</option>
-            <option value="浙江">浙江</option>
-            <!-- 可扩展更多省份 -->
+            <option value="" disabled selected>选择省份</option>
+            <option value="北京市">北京市</option>
+            <option value="上海市">上海市</option>
+            <option value="天津市">天津市</option>
+            <option value="重庆市">重庆市</option>
+            <option value="河北省">河北省</option>
+            <option value="山西省">山西省</option>
+            <option value="辽宁省">辽宁省</option>
+            <option value="吉林省">吉林省</option>
+            <option value="黑龙江省">黑龙江省</option>
+            <option value="江苏省">江苏省</option>
+            <option value="浙江省">浙江省</option>
+            <option value="安徽省">安徽省</option>
+            <option value="福建省">福建省</option>
+            <option value="江西省">江西省</option>
+            <option value="山东省">山东省</option>
+            <option value="河南省">河南省</option>
+            <option value="湖北省">湖北省</option>
+            <option value="湖南省">湖南省</option>
+            <option value="广东省">广东省</option>
+            <option value="海南省">海南省</option>
+            <option value="四川省">四川省</option>
+            <option value="贵州省">贵州省</option>
+            <option value="云南省">云南省</option>
+            <option value="陕西省">陕西省</option>
+            <option value="甘肃省">甘肃省</option>
+            <option value="青海省">青海省</option>
           </select>
           
-          <select name="城市" id="city" required>
-            <option value="" disabled selected>城市</option>
-            <option value="北京">北京</option>
-            <option value="上海">上海</option>
-            <option value="广州">广州</option>
-            <option value="深圳">深圳</option>
-            <!-- 可扩展更多城市 -->
+          <select name="城市" id="city" required disabled>
+            <option value="" disabled selected>选择城市</option>
           </select>
           
-          <select name="区域" id="district" required>
-            <option value="" disabled selected>区域</option>
-            <option value="默认区域">请根据实际城市选择区域</option>
+          <select name="区域" id="district" required disabled>
+            <option value="" disabled selected>选择区域</option>
           </select>
         </div>
       </div>
       
-      <!-- 物业信息（只有有或没有） -->
+      <!-- 物业信息 -->
       <div class="form-group">
         <label>是否有物业 *</label>
         <div class="radio-group">
@@ -212,7 +226,7 @@
         </div>
       </div>
       
-      <!-- 您想了解的内容（不含酒店筹建选项） -->
+      <!-- 您想了解的内容 -->
       <div class="form-group">
         <label>您想了解的内容 * (可多选)</label>
         <div class="checkbox-group">
@@ -249,36 +263,158 @@
     let radioValue = '';
     let checkboxValues = [];
 
-    // 城市区域数据（简化版）
-    const districtData = {
-      "北京": ["东城区", "西城区", "朝阳区", "丰台区"],
-      "上海": ["黄浦区", "徐汇区", "长宁区", "静安区"],
-      "广州": ["越秀区", "荔湾区", "海珠区", "天河区"],
-      "深圳": ["福田区", "罗湖区", "南山区", "盐田区"]
-      // 可根据需要扩展更多城市的区域
+    // 完善的省份-城市-区域数据（确保每个省份都有城市，每个城市都有区域）
+    const regionData = {
+      // 直辖市（省级）
+      "北京市": {
+        "北京市": ["东城区", "西城区", "朝阳区", "海淀区", "丰台区", "通州区", "顺义区", "昌平区"]
+      },
+      "上海市": {
+        "上海市": ["黄浦区", "徐汇区", "长宁区", "静安区", "普陀区", "虹口区", "杨浦区", "浦东新区"]
+      },
+      "天津市": {
+        "天津市": ["和平区", "河东区", "河西区", "南开区", "河北区", "红桥区", "滨海新区"]
+      },
+      "重庆市": {
+        "重庆市": ["渝中区", "江北区", "沙坪坝区", "南岸区", "九龙坡区", "渝北区", "巴南区"]
+      },
+      
+      // 省份及省会城市
+      "河北省": {
+        "石家庄市": ["长安区", "桥西区", "新华区", "裕华区", "井陉矿区"],
+        "唐山市": ["路南区", "路北区", "古冶区", "开平区", "丰南区"]
+      },
+      "山西省": {
+        "太原市": ["小店区", "迎泽区", "杏花岭区", "尖草坪区", "万柏林区"],
+        "大同市": ["平城区", "云冈区", "新荣区", "云州区"]
+      },
+      "辽宁省": {
+        "沈阳市": ["和平区", "沈河区", "大东区", "皇姑区", "铁西区"],
+        "大连市": ["中山区", "西岗区", "沙河口区", "甘井子区"]
+      },
+      "吉林省": {
+        "长春市": ["南关区", "宽城区", "朝阳区", "二道区", "绿园区"],
+        "吉林市": ["昌邑区", "龙潭区", "船营区", "丰满区"]
+      },
+      "黑龙江省": {
+        "哈尔滨市": ["道里区", "南岗区", "道外区", "平房区", "松北区"],
+        "齐齐哈尔市": ["龙沙区", "建华区", "铁锋区"]
+      },
+      "江苏省": {
+        "南京市": ["玄武区", "秦淮区", "建邺区", "鼓楼区", "浦口区"],
+        "苏州市": ["姑苏区", "虎丘区", "吴中区", "相城区", "吴江区"],
+        "无锡市": ["梁溪区", "锡山区", "惠山区", "滨湖区"]
+      },
+      "浙江省": {
+        "杭州市": ["上城区", "下城区", "江干区", "拱墅区", "西湖区"],
+        "宁波市": ["海曙区", "江北区", "北仑区", "镇海区", "鄞州区"],
+        "温州市": ["鹿城区", "龙湾区", "瓯海区"]
+      },
+      "安徽省": {
+        "合肥市": ["瑶海区", "庐阳区", "蜀山区", "包河区"],
+        "芜湖市": ["镜湖区", "弋江区", "鸠江区", "三山区"]
+      },
+      "福建省": {
+        "福州市": ["鼓楼区", "台江区", "仓山区", "马尾区", "晋安区"],
+        "厦门市": ["思明区", "海沧区", "湖里区", "集美区"]
+      },
+      "江西省": {
+        "南昌市": ["东湖区", "西湖区", "青云谱区", "湾里区", "青山湖区"],
+        "赣州市": ["章贡区", "南康区", "赣县区"]
+      },
+      "山东省": {
+        "济南市": ["历下区", "市中区", "槐荫区", "天桥区", "历城区"],
+        "青岛市": ["市南区", "市北区", "黄岛区", "崂山区"]
+      },
+      "河南省": {
+        "郑州市": ["中原区", "二七区", "管城回族区", "金水区", "上街区"],
+        "洛阳市": ["老城区", "西工区", "瀍河回族区", "涧西区"]
+      },
+      "湖北省": {
+        "武汉市": ["江岸区", "江汉区", "硚口区", "汉阳区", "武昌区"],
+        "宜昌市": ["西陵区", "伍家岗区", "点军区", "猇亭区"]
+      },
+      "湖南省": {
+        "长沙市": ["芙蓉区", "天心区", "岳麓区", "开福区", "雨花区"],
+        "株洲市": ["荷塘区", "芦淞区", "石峰区", "天元区"]
+      },
+      "广东省": {
+        "广州市": ["越秀区", "荔湾区", "海珠区", "天河区", "白云区"],
+        "深圳市": ["福田区", "罗湖区", "南山区", "盐田区", "宝安区"],
+        "佛山市": ["禅城区", "南海区", "顺德区", "三水区"]
+      },
+      "海南省": {
+        "海口市": ["秀英区", "龙华区", "琼山区", "美兰区"],
+        "三亚市": ["海棠区", "吉阳区", "天涯区", "崖州区"]
+      },
+      "四川省": {
+        "成都市": ["锦江区", "青羊区", "金牛区", "武侯区", "成华区"],
+        "绵阳市": ["涪城区", "游仙区", "安州区"]
+      },
+      "贵州省": {
+        "贵阳市": ["南明区", "云岩区", "花溪区", "乌当区", "白云区"],
+        "遵义市": ["红花岗区", "汇川区", "播州区"]
+      },
+      "云南省": {
+        "昆明市": ["五华区", "盘龙区", "官渡区", "西山区", "东川区"],
+        "曲靖市": ["麒麟区", "沾益区", "马龙区"]
+      },
+      "陕西省": {
+        "西安市": ["新城区", "碑林区", "莲湖区", "灞桥区", "未央区"],
+        "宝鸡市": ["渭滨区", "金台区", "陈仓区"]
+      },
+      "甘肃省": {
+        "兰州市": ["城关区", "七里河区", "西固区", "安宁区", "红古区"],
+        "天水市": ["秦州区", "麦积区"]
+      },
+      "青海省": {
+        "西宁市": ["城东区", "城中区", "城西区", "城北区", "湟中区"],
+        "海东市": ["乐都区", "平安区"]
+      }
     };
+
+    // 省份选择变化时更新城市选项
+    provinceSelect.addEventListener('change', function() {
+      const selectedProvince = this.value;
+      citySelect.innerHTML = '<option value="" disabled selected>选择城市</option>';
+      districtSelect.innerHTML = '<option value="" disabled selected>选择区域</option>';
+      
+      if (selectedProvince && regionData[selectedProvince]) {
+        citySelect.disabled = false;
+        // 填充对应省份的城市
+        Object.keys(regionData[selectedProvince]).forEach(city => {
+          const option = document.createElement('option');
+          option.value = city;
+          option.textContent = city;
+          citySelect.appendChild(option);
+        });
+      } else {
+        citySelect.disabled = true;
+        districtSelect.disabled = true;
+      }
+    });
 
     // 城市选择变化时更新区域选项
     citySelect.addEventListener('change', function() {
+      const selectedProvince = provinceSelect.value;
       const selectedCity = this.value;
       districtSelect.innerHTML = '<option value="" disabled selected>选择区域</option>';
       
-      if (districtData[selectedCity]) {
-        districtData[selectedCity].forEach(district => {
+      if (selectedProvince && selectedCity && regionData[selectedProvince][selectedCity]) {
+        districtSelect.disabled = false;
+        // 填充对应城市的区域
+        regionData[selectedProvince][selectedCity].forEach(district => {
           const option = document.createElement('option');
           option.value = district;
           option.textContent = district;
           districtSelect.appendChild(option);
         });
       } else {
-        const option = document.createElement('option');
-        option.value = "其他区域";
-        option.textContent = "请手动填写详细区域";
-        districtSelect.appendChild(option);
+        districtSelect.disabled = true;
       }
     });
 
-    // 单选按钮：点击切换选中状态
+    // 单选按钮交互
     radioBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         radioBtns.forEach(b => b.classList.remove('active'));
@@ -288,7 +424,7 @@
       });
     });
 
-    // 多选按钮：点击切换选中状态
+    // 多选按钮交互
     checkboxBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const value = btn.dataset.value;
@@ -307,13 +443,17 @@
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
       
-      // 验证单选和多选是否有选择
+      // 验证必选字段
       if (!radioValue) {
         alert('请选择“是否有物业”');
         return;
       }
       if (checkboxValues.length === 0) {
         alert('请至少选择一项“您想了解的内容”');
+        return;
+      }
+      if (!districtSelect.value) {
+        alert('请选择完整的加盟地区');
         return;
       }
       
